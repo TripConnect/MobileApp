@@ -24,6 +24,7 @@ export default function Home() {
                 <Image style={styles.photo} source={homePhoto} />
             </View>
         </View>
+
     );
 }
 
@@ -45,7 +46,6 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
     },
     title__hightlight: {
-        display: 'block',
         fontWeight: 500,
     },
 
