@@ -1,8 +1,16 @@
 import { View, StyleSheet, Text, Pressable, ImageBackground, SafeAreaView, TextInput } from "react-native";
+import { useState } from "react";
 
 import loginPhoto from '../assets/image/login-photo.jpg';
 
 export default function Login() {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = () => {
+        console.log({ username, password });
+    }
+
     return (
         <ImageBackground source={loginPhoto} resizeMode="cover" style={styles.coverImage} blurRadius={2.5}>
             <View style={styles.container}>
@@ -14,12 +22,15 @@ export default function Login() {
                     <TextInput
                         style={styles.main__inputField}
                         placeholder="Enter username"
+                        onChangeText={(username) => setUsername(username)}
                     />
                     <TextInput
                         style={styles.main__inputField}
                         placeholder="Enter password"
+                        onChangeText={(password) => setPassword(password)}
+                        secureTextEntry={true}
                     />
-                    <Pressable style={styles.main__entryButton} onPress={() => { console.log("Let login"); }}>
+                    <Pressable style={styles.main__entryButton} onPress={handleLogin}>
                         <Text style={styles.main__entryButton__text}>Login</Text>
                     </Pressable>
                 </SafeAreaView>
