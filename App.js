@@ -6,8 +6,8 @@ import Login from './screens/Login';
 export default function App() {
   return (
     <View>
-      <Home />
-      {/* <Login /> */}
+      {/* <Home /> */}
+      <Login />
       <StatusBar style="auto" />
     </View>
   );

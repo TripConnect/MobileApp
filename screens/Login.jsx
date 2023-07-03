@@ -11,19 +11,17 @@ export default function Login() {
                     <Text style={styles.header__subscription}>Let enjoy your journey</Text>
                 </View>
                 <SafeAreaView style={styles.main}>
-                    <View>
-                        <TextInput
-                            style={styles.main__inputField}
-                            placeholder="Enter username"
-                        />
-                        <TextInput
-                            style={styles.main__inputField}
-                            placeholder="Enter password"
-                        />
-                        <Pressable style={styles.main__entryButton} onPress={() => { console.log("Let login"); }}>
-                            <Text style={styles.main__entryButton__text}>Login</Text>
-                        </Pressable>
-                    </View>
+                    <TextInput
+                        style={styles.main__inputField}
+                        placeholder="Enter username"
+                    />
+                    <TextInput
+                        style={styles.main__inputField}
+                        placeholder="Enter password"
+                    />
+                    <Pressable style={styles.main__entryButton} onPress={() => { console.log("Let login"); }}>
+                        <Text style={styles.main__entryButton__text}>Login</Text>
+                    </Pressable>
                 </SafeAreaView>
                 <View style={styles.footer}>
                     <Text style={styles.footer__text}>Create Account | Forget Pasword</Text>
@@ -61,12 +59,13 @@ const styles = StyleSheet.create({
     header__subscription: {
         fontSize: 30,
         fontWeight: 200,
+        fontStyle: 'italic',
         color: '#eee',
     },
 
     main: {
         flex: 1,
-        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     main__inputField: {
         width: "100%",
@@ -78,7 +77,6 @@ const styles = StyleSheet.create({
     main__entryButton: {
         width: '100%',
         backgroundColor: '#425884',
-        borderRadius: 4,
         padding: 20,
         borderRadius: 50,
         justifyContent: 'center',
