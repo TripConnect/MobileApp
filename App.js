@@ -1,9 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
-import Home from './screens/Home';
-import Login from './screens/Login';
+import Router from './Router';
 
 const client = new ApolloClient({
   uri: 'http://localhost:3000/graphql',
@@ -13,11 +11,8 @@ const client = new ApolloClient({
 export default function App() {
   return (
     <ApolloProvider client={client}>
-      <View>
-        {/* <Home /> */}
-        <Login />
-        <StatusBar style="auto" />
-      </View>
+      <Router />
+      <StatusBar style="auto" />
     </ApolloProvider>
   );
 }

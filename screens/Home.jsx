@@ -2,7 +2,7 @@ import { View, StyleSheet, Text, Image, Pressable } from "react-native";
 
 import homePhoto from '../assets/image/home-photo.png';
 
-export default function Home() {
+export default function Home({ navigation }) {
     return (
         <View style={styles.container}>
             <View>
@@ -16,7 +16,7 @@ export default function Home() {
                 </Text>
             </View>
             <View>
-                <Pressable style={styles.entryButton} onPress={() => { console.log("Let authorization"); }}>
+                <Pressable style={styles.entryButton} onPress={() => { navigation.navigate("Login") }}>
                     <Text style={styles.entryButton__text}>Enter</Text>
                 </Pressable>
             </View>
