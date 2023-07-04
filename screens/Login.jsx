@@ -9,6 +9,8 @@ export default function Login() {
 
     const handleLogin = () => {
         console.log({ username, password });
+        setUsername('');
+        setPassword('');
     }
 
     return (
@@ -21,14 +23,18 @@ export default function Login() {
                 <SafeAreaView style={styles.main}>
                     <TextInput
                         style={styles.main__inputField}
-                        placeholder="Enter username"
+                        placeholder="Username"
                         onChangeText={(username) => setUsername(username)}
+                        value={username}
+                        placeholderTextColor="#fff"
                     />
                     <TextInput
                         style={styles.main__inputField}
-                        placeholder="Enter password"
+                        placeholder="Password"
                         onChangeText={(password) => setPassword(password)}
+                        value={password}
                         secureTextEntry={true}
+                        placeholderTextColor="#fff"
                     />
                     <Pressable style={styles.main__entryButton} onPress={handleLogin}>
                         <Text style={styles.main__entryButton__text}>Login</Text>
@@ -64,7 +70,7 @@ const styles = StyleSheet.create({
     },
     header__title: {
         fontSize: 50,
-        fontWeight: 500,
+        fontWeight: 800,
         color: 'darkblue',
     },
     header__subscription: {
@@ -77,21 +83,36 @@ const styles = StyleSheet.create({
     main: {
         flex: 1,
         alignItems: 'center',
+        justifyContent: 'center',
+
+        backgroundColor: "rgba(10, 10, 10, 0.3)",
+        paddingHorizontal: 25,
+        paddingVertical: 25,
+        borderRadius: 10,
+
     },
     main__inputField: {
         width: "100%",
-        borderRadius: 50,
         padding: 20,
-        backgroundColor: '#eeeeee',
         margin: 5,
+        color: "#eee",
+
+        borderTopColor: "transparent",
+        borderLeftColor: "transparent",
+        borderRightColor: "transparent",
+
+        borderWidth: 1,
+        borderColor: "#eee",
+        backgroundColor: "transparent",
     },
     main__entryButton: {
         width: '100%',
         backgroundColor: '#425884',
         padding: 20,
-        borderRadius: 50,
+        borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 20,
     },
     main__entryButton__text: {
         color: "#e5e5e5",
@@ -99,11 +120,12 @@ const styles = StyleSheet.create({
     },
 
     footer: {
-        flex: 0.5,
+        flex: 1,
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "flex-end",
+        paddingBottom: 50,
     },
     footer__text: {
-        color: "#eeeeee",
+        color: "#eee",
     }
 });

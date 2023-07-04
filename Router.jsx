@@ -14,7 +14,7 @@ const Stack = createNativeStackNavigator();
 export default function Router() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Home">
+            <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
                 {ROUTES.map(route => <Stack.Screen key={"screen" + route.name} {...route} />)}
             </Stack.Navigator>
         </NavigationContainer >
