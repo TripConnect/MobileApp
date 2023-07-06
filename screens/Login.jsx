@@ -1,16 +1,37 @@
-import { View, StyleSheet, Text, Pressable, ImageBackground, SafeAreaView, TextInput } from "react-native";
-import { useState } from "react";
+import { View, StyleSheet, Text, Pressable, ImageBackground, SafeAreaView, TextInput, Alert } from "react-native";
+import { useState, useEffect } from "react";
+
+
+import { gql, useMutation } from '@apollo/client';
+const LOGIN_MUTATION = gql`
+  mutation Login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+        token {
+            user_id
+            access_token
+        }
+    }
+  }
+`;
 
 import loginPhoto from '../assets/image/login-photo.jpg';
 
-export default function Login() {
+export default function Login({ navigation }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION);
 
     const handleLogin = () => {
-        console.log({ username, password });
-        setUsername('');
-        setPassword('');
+        login({ variables: { username, password } })
+            .then(response => {
+                if (response?.data?.login?.token) {
+                    navigation.navigate("User", { user_id: response.data.login.token.user_id });
+                } else {
+                    Alert.alert('Login failed', 'Username or password is invalid');
+                    setUsername('');
+                    setPassword('');
+                }
+            });
     }
 
     return (
@@ -36,7 +57,10 @@ export default function Login() {
                         secureTextEntry={true}
                         placeholderTextColor="#fff"
                     />
-                    <Pressable style={styles.main__entryButton} onPress={handleLogin}>
+                    <Pressable
+                        style={styles.main__entryButton}
+                        onPress={handleLogin}
+                    >
                         <Text style={styles.main__entryButton__text}>Login</Text>
                     </Pressable>
                 </SafeAreaView>
