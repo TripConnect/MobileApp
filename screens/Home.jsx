@@ -1,6 +1,6 @@
 import { View, StyleSheet, Text, Image, Pressable } from "react-native";
 
-import homePhoto from '../assets/image/home-photo.png';
+import homePhoto from '../assets/image/HomePhoto.png';
 
 export default function Home({ navigation }) {
     return (

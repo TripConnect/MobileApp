@@ -14,7 +14,7 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-import loginPhoto from '../assets/image/login-photo.jpg';
+import loginPhoto from '../assets/image/LoginPhoto.jpg';
 
 export default function Login({ navigation }) {
     const [username, setUsername] = useState('');

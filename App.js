@@ -4,7 +4,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import Router from './Router';
 
 const client = new ApolloClient({
-  uri: 'http://192.168.1.8:3000/graphql',
+  uri: `${process.env.EXPO_PUBLIC_API_URL}/graphql`,
   cache: new InMemoryCache()
 });
 
