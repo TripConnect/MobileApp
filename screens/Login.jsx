@@ -25,7 +25,7 @@ export default function Login({ navigation }) {
         login({ variables: { username, password } })
             .then(response => {
                 if (response?.data?.login?.token) {
-                    navigation.navigate("User", { user_id: response.data.login.token.user_id });
+                    navigation.navigate("Home", { user_id: response.data.login.token.user_id });
                 } else {
                     Alert.alert('Login failed', 'Username or password is invalid');
                     setUsername('');

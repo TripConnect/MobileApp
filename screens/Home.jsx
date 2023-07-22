@@ -1,73 +1,84 @@
-import { View, StyleSheet, Text, Image, Pressable } from "react-native";
+import { StyleSheet, View, TextInput, Text, Pressable, Image } from "react-native";
+import { useState, useEffect } from "react";
 
-import homePhoto from '../assets/image/HomePhoto.png';
+import { gql, useLazyQuery } from '@apollo/client';
+const SEARCH_USER_QUERY = gql`
+  query SearchUser($display_name_pattern: String!) {
+    searchUser(display_name_pattern: $display_name_pattern) {
+        user_id
+        display_name
+    }
+  }
+`;
 
 export default function Home({ navigation }) {
+    let [userFilter, setUserFilter] = useState("");
+    let [searchedUsers, setSearchedUsers] = useState([]);
+    const [searchUser, { loading, error, data }] = useLazyQuery(SEARCH_USER_QUERY);
+
+    const handleSearchUserSubmit = () => {
+        if (!userFilter) return;
+        searchUser({ variables: { display_name_pattern: userFilter } })
+            .then(response => {
+                let users = response.data.searchUser;
+                setSearchedUsers(users);
+            });
+    }
+
     return (
         <View style={styles.container}>
             <View>
-                <Text style={styles.title}>
-                    Let's{"\n"}
-                    <Text style={styles.title__hightlight}>Explore</Text>{"\n"}
-                    the world
-                </Text>
-                <Text style={styles.subscription}>
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Adipisci voluptatibus fuga accusamus in. Similique, libero. Fuga libero dolores provident accusantium.
-                </Text>
-            </View>
-            <View>
-                <Pressable style={styles.entryButton} onPress={() => { navigation.navigate("Login") }}>
-                    <Text style={styles.entryButton__text}>Enter</Text>
-                </Pressable>
-            </View>
-            <View>
-                <Image style={styles.photo} source={homePhoto} />
+                <TextInput
+                    style={styles.main__inputField}
+                    placeholder="Search"
+                    onChangeText={(filterValue) => setUserFilter(filterValue)}
+                    value={userFilter}
+                    placeholderTextColor="black"
+                    onSubmitEditing={handleSearchUserSubmit}
+                />
+                <View>
+                    {
+                        searchedUsers.map(user => (
+                            <Pressable
+                                style={styles.main__searchedUser__user}
+                                onPress={() => navigation.navigate("User", user)}
+                            >
+                                <Image source={{ uri: 'https://reactjs.org/logo-og.png' }}
+                                    style={{ width: 30, height: 30, marginEnd: 10, }} />
+                                <Text>{user.display_name}</Text>
+                            </Pressable>
+                        ))
+                    }
+                </View>
             </View>
         </View>
-
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
-        justifyContent: "space-around",
         paddingTop: 70,
         paddingBottom: 20,
         paddingHorizontal: 50,
-        backgroundColor: '#e5e5e5',
+        height: "100%",
+        with: "100%",
+        alignItems: "stretch",
+        justifyContent: 'flex-start',
     },
-
-    title: {
-        marginBottom: 30,
-        color: '#425884',
-        fontSize: 50,
-        fontWeight: 300,
-        textTransform: 'uppercase',
-    },
-    title__hightlight: {
-        fontWeight: 500,
-    },
-
-    entryButton: {
-        backgroundColor: '#425884',
-        borderRadius: 4,
-        padding: 20,
-        width: '50%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    entryButton__text: {
-        color: "#e5e5e5",
-        textTransform: 'uppercase',
-    },
-
-    subscription: {
-        color: '#425884',
-        fontWeight: 200,
-    },
-
-    photo: {
+    main__inputField: {
         width: "100%",
-    }
+        padding: 20,
+        margin: 5,
+
+        borderWidth: 1,
+        borderColor: "black",
+        borderRadius: 10,
+        backgroundColor: "transparent",
+    },
+    main__searchedUser__user: {
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        marginVertical: 5,
+    },
 });
