@@ -40,6 +40,7 @@ export default function Home({ navigation }) {
                     {
                         searchedUsers.map(user => (
                             <Pressable
+                                key={`user${user.user_id}`}
                                 style={styles.main__searchedUser__user}
                                 onPress={() => navigation.navigate("User", user)}
                             >

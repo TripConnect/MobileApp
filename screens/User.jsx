@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         fontSize: 30,
     },
     header__title__highlight: {
-        fontWeight: 600,
+        fontWeight: "600",
         color: 'darkblue',
     },
     main: {

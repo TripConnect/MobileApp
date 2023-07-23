@@ -90,16 +90,16 @@ const styles = StyleSheet.create({
 
     header: {
         flex: 1,
-        fontWeight: 100,
+        fontWeight: "100",
     },
     header__title: {
         fontSize: 50,
-        fontWeight: 800,
+        fontWeight: "800",
         color: 'darkblue',
     },
     header__subscription: {
         fontSize: 30,
-        fontWeight: 200,
+        fontWeight: "200",
         fontStyle: 'italic',
         color: '#eee',
     },

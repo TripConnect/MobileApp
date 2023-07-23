@@ -42,11 +42,11 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         color: '#425884',
         fontSize: 50,
-        fontWeight: 300,
+        fontWeight: "300",
         textTransform: 'uppercase',
     },
     title__hightlight: {
-        fontWeight: 500,
+        fontWeight: "500",
     },
 
     entryButton: {
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
 
     subscription: {
         color: '#425884',
-        fontWeight: 200,
+        fontWeight: "200",
     },
 
     photo: {
