@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 
-export default function User({ route }) {
+export default function User({ navigation, route }) {
     const { user_id, display_name } = route.params;
 
     return (
@@ -11,7 +11,10 @@ export default function User({ route }) {
                 </Text>
             </View>
             <View style={styles.main}>
-                <Pressable style={styles.main__chatButton}>
+                <Pressable
+                    style={styles.main__chatButton}
+                    onPress={() => navigation.navigate("Chat", { user_id })}
+                >
                     <Text>Chat</Text>
                 </Pressable>
             </View>
