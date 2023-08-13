@@ -2,19 +2,7 @@ import { View, StyleSheet, Text, Pressable, ImageBackground, SafeAreaView, TextI
 import { useState } from "react";
 import { gql, useQuery } from '@apollo/client';
 
-const io = require('socket.io-client/dist/socket.io');
-const socket = io(
-    process.env.EXPO_PUBLIC_API_URL,
-    {
-        transports: ['websocket'], // you need to explicitly tell it to use websockets
-    },
-);
-socket.on('connect', () => {
-    console.log('connected');
-});
-socket.on('connect_error', err => {
-    console.log(err.message);
-});
+import SocketIOConnection from "../services/socket";
 
 const USER_QUERY = gql`
   query LoadUser($user_id: String!) {
@@ -34,7 +22,7 @@ export default function Chat({ route }) {
 
     const handleChatCommit = () => {
         console.log({ message: chatMessage, to: user_id });
-        socket.emit("CHAT", { message: chatMessage, to: user_id });
+        SocketIOConnection.getSocket().emit("chat", { content: chatMessage, to_user_id: user_id });
     }
 
     return (
@@ -51,10 +39,9 @@ export default function Chat({ route }) {
                         <View>
                             <TextInput
                                 style={styles.main__inputField}
-                                placeholder="Username"
+                                placeholder="Enter message"
                                 onChangeText={(message) => setChatMessage(message)}
                                 onSubmitEditing={handleChatCommit}
-                                placeholderTextColor="#fff"
                             />
                         </View>
                     </>

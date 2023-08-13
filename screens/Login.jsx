@@ -1,6 +1,7 @@
 import { View, StyleSheet, Text, Pressable, ImageBackground, SafeAreaView, TextInput, Alert } from "react-native";
 import { useState, useEffect } from "react";
 
+import SocketIOConnection from "../services/socket";
 
 import { gql, useMutation } from '@apollo/client';
 const LOGIN_MUTATION = gql`
@@ -25,7 +26,9 @@ export default function Login({ navigation }) {
         login({ variables: { username, password } })
             .then(response => {
                 if (response?.data?.login?.token) {
-                    navigation.navigate("Home", { user_id: response.data.login.token.user_id });
+                    let { user_id, access_token } = response.data.login.token;
+                    SocketIOConnection.initializeSocket(access_token);
+                    navigation.navigate("Home", { user_id });
                 } else {
                     Alert.alert('Login failed', 'Username or password is invalid');
                     setUsername('');
