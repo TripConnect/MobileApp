@@ -1,6 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
+import { store } from './store';
+import { Provider } from 'react-redux';
+
 import Router from './Router';
 
 const client = new ApolloClient({
@@ -10,9 +13,11 @@ const client = new ApolloClient({
 
 export default function App() {
   return (
-    <ApolloProvider client={client}>
-      <Router />
-      <StatusBar style="auto" />
-    </ApolloProvider>
+    <Provider store={store}>
+      <ApolloProvider client={client}>
+        <Router />
+        <StatusBar style="auto" />
+      </ApolloProvider>
+    </Provider>
   );
 }
