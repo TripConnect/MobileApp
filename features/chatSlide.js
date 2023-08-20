@@ -7,11 +7,11 @@ export const chatSlice = createSlice({
     name: 'chatSlice',
     initialState,
     reducers: {
-        addConventionMessage: ({ conventionId, ...message }) => {
+        addConventionMessage: (state, { conventionId, ...message }) => {
             if (!initialState.hasOwnProperty(conventionId)) {
                 initialState[conventionId] = [];
             }
-            initialState[conventionId].push(message);
+            initialState[conventionId] = [state[conventionId], ...message];
             if (initialState.length > STATE_SIZE) {
                 initialState = initialState.slice(0, STATE_SIZE);
             }
