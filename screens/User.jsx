@@ -1,7 +1,30 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
+import { gql, useMutation } from '@apollo/client';
+import { useSelector } from "react-redux";
+
+const CREATE_CONVENTION_MUTATION = gql`
+    mutation CreateConversation($name: String, $user_ids: [String!]!, $type: String!) {
+        createConversation(name: $name, user_ids: $user_ids, type: $type) {
+            conversation_id
+        }
+    }
+`;
+
 
 export default function User({ navigation, route }) {
     const { user_id, display_name } = route.params;
+    const [createConversation, { data, loading, error }] = useMutation(CREATE_CONVENTION_MUTATION);
+    let currentUserId = useSelector(state => state.account.userId);
+
+    const handleChatButtonPress = () => {
+        createConversation({ variables: { name: null, user_ids: [currentUserId, user_id], type: "private" } })
+            .then(response => {
+                navigation.navigate("Chat", {
+                    conversationId: parseInt(response.data.createConversation.conversation_id),
+                    user_id: user_id,
+                })
+            });
+    }
 
     return (
         <View style={styles.container}>
@@ -13,7 +36,8 @@ export default function User({ navigation, route }) {
             <View style={styles.main}>
                 <Pressable
                     style={styles.main__chatButton}
-                    onPress={() => navigation.navigate("Chat", { user_id })}
+                    onPress={handleChatButtonPress}
+                    disabled={currentUserId === user_id}
                 >
                     <Text>Chat</Text>
                 </Pressable>

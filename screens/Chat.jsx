@@ -1,8 +1,8 @@
 import { View, StyleSheet, Text, Pressable, ImageBackground, SafeAreaView, TextInput, Alert } from "react-native";
 import { useState } from "react";
 import { gql, useQuery } from '@apollo/client';
+import { useSelector } from "react-redux";
 
-import SocketIOConnection from "../services/socket";
 
 const USER_QUERY = gql`
   query LoadUser($user_id: String!) {
@@ -13,28 +13,65 @@ const USER_QUERY = gql`
   }
 `;
 
+
+const LOAD_CONVENTION_QUERY = gql`
+    query LoadConversation($conversation_id: ID!, $page: Int, $limit: Int) {
+        loadConversation(conversation_id: $conversation_id, page: $page, limit: $limit) {
+            name
+            messages
+        }
+    }
+`;
+
+
 export default function Chat({ route }) {
-    const { user_id } = route.params;
+    const { user_id, conversationId } = route.params;
+
+    const socket = useSelector((state) => state.account.socket);
     const [chatMessage, setChatMessage] = useState("");
-    const { data, loading, error } = useQuery(USER_QUERY, {
+    const [conversationMessages, setConversationMessage] = useState({});
+    const { loading: userLoading, error: userError, data: userData } = useQuery(USER_QUERY, {
         variables: { user_id }
     });
+    const { loading: conversationLoading, error: conversationError, data: conversationData } = useQuery(LOAD_CONVENTION_QUERY, {
+        variables: { conversation_id: conversationId, page: 1, limit: 50 }
+    });
+    if (userError) {
+        Alert.alert("Error", `Error! ${userError}`);
+        return <Text>{`Error! ${userError}`}</Text>;
+    };
+    if (conversationError) {
+        Alert.alert("Error", `Error! ${conversationError}`)
+        return <Text>{`Error! ${conversationError}`}</Text>;
+    }
+
+    if (!conversationLoading && !conversationError) {
+        console.log({ conversationData });
+        setConversationMessage(conversationData.loadConversation.messages);
+    }
 
     const handleChatCommit = () => {
         console.log({ message: chatMessage, to: user_id });
-        SocketIOConnection.getSocket().emit("chat", { content: chatMessage, to_user_id: user_id });
+        socket.emit("chat", { content: chatMessage, to_user_id: user_id });
     }
 
     return (
         <View style={styles.container}>
             {
-                loading ?
+                (userLoading || conversationData) ?
                     <Text>Loading...</Text>
                     :
                     <>
-                        <Text>{data.loadUser.display_name}</Text>
+                        <Text>{userData.loadUser.display_name}</Text>
                         <View style={styles.messageContainer}>
-
+                            {
+                                conversationMessages.map(
+                                    message => (<View>
+                                        <Text>{message.from_user_id}</Text>
+                                        <Text>{message.content}</Text>
+                                    </View>)
+                                )
+                            }
                         </View>
                         <View>
                             <TextInput

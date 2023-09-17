@@ -1,8 +1,6 @@
 import { View, StyleSheet, Text, Pressable, ImageBackground, SafeAreaView, TextInput, Alert } from "react-native";
 import { useState, useEffect } from "react";
 
-import SocketIOConnection from "../services/socket";
-
 import { gql, useMutation } from '@apollo/client';
 const LOGIN_MUTATION = gql`
   mutation Login($username: String!, $password: String!) {
@@ -16,8 +14,11 @@ const LOGIN_MUTATION = gql`
 `;
 
 import loginPhoto from '../assets/image/LoginPhoto.jpg';
+import { setToken } from "../features/userSlice";
+import { useDispatch } from "react-redux";
 
 export default function Login({ navigation }) {
+    const dispatch = useDispatch();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION);
@@ -27,7 +28,8 @@ export default function Login({ navigation }) {
             .then(response => {
                 if (response?.data?.login?.token) {
                     let { user_id, access_token } = response.data.login.token;
-                    SocketIOConnection.initializeSocket(access_token);
+                    console.log({ "login": { accessToken: access_token, userId: user_id } });
+                    dispatch(setToken({ accessToken: access_token, userId: user_id }));
                     navigation.navigate("Home", { user_id });
                 } else {
                     Alert.alert('Login failed', 'Username or password is invalid');

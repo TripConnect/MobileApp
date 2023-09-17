@@ -1,32 +1,23 @@
-const io = require('socket.io-client/dist/socket.io');
+import { useSelector, useDispatch } from 'react-redux';
+import { addConventionMessage } from '../features/chatSlice';
 
 
-
-class SocketIOConnection {
-    static socket = null;
-
-    static initializeSocket(accessToken) {
-        console.log("Initialize socket connection: " + accessToken);
-        this.socket = io(
-            process.env.EXPO_PUBLIC_API_URL,
-            {
-                transports: ['websocket'], // you need to explicitly tell it to use websockets
-                auth: {
-                    token: accessToken,
-                }
-            },
-        );
-        this.socket.on('connect', () => {
+export default function SocketIOListener() {
+    const socket = useSelector((state) => state?.user?.socket);
+    const dispatch = useDispatch()
+    if (socket) {
+        socket.on('connect', () => {
             console.log('connected');
         });
-        this.socket.on('connect_error', err => {
+        socket.on('connect_error', err => {
             console.log(err.message);
+        });
+        socket.on('chat', data => {
+            console.log({ "chat": data });
+            let { conventionId, content, fromUserId, toUserId } = data;
+            dispatch(addConventionMessage({ conventionId, content, fromUserId, toUserId }));
         });
     }
 
-    static getSocket() {
-        return this.socket;
-    }
+    return (<></>);
 }
-
-export default SocketIOConnection;

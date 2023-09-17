@@ -20,6 +20,6 @@ export const chatSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { addMessage } = chatSlice.actions
+export const { addConventionMessage } = chatSlice.actions;
 
 export default chatSlice.reducer;
