@@ -15,8 +15,9 @@ const USER_QUERY = gql`
 
 
 const LOAD_CONVENTION_QUERY = gql`
-    query LoadConversation($conversation_id: ID!, $page: Int, $limit: Int) {
-        loadConversation(conversation_id: $conversation_id, page: $page, limit: $limit) {
+    query LoadConversation($conversation_id: ID!, $limit: Int, $page: Int) {
+        loadConversation(conversation_id: $conversation_id, limit: $limit, page: $page) {
+            conversation_id
             name
             messages {
                 from_user_id
@@ -30,7 +31,7 @@ const LOAD_CONVENTION_QUERY = gql`
 
 export default function Chat({ route }) {
     const { user_id, conversationId } = route.params;
-
+    const currentUserId = useSelector((state) => state.account.userId);
     const socket = useSelector((state) => state.account.socket);
     const [chatMessage, setChatMessage] = useState("");
     const { loading: userLoading, error: userError, data: userData } = useQuery(USER_QUERY, {
@@ -49,8 +50,9 @@ export default function Chat({ route }) {
     }
 
     const handleChatCommit = () => {
-        console.log({ message: chatMessage, to: user_id });
-        socket.emit("chat", { content: chatMessage, to_user_id: user_id });
+        console.log({ message: chatMessage, toUserId: user_id, conversationId });
+        socket.emit("chat", { content: chatMessage, toUserId: user_id, conversationId });
+        setChatMessage("");
     }
 
     return (
@@ -60,11 +62,11 @@ export default function Chat({ route }) {
                     <Text>Loading...</Text>
                     :
                     <>
-                        <Text>{userData.loadUser.display_name}</Text>
+                        <Text style={styles.roomTitle}>{userData.loadUser.display_name}</Text>
                         <View style={styles.messageContainer}>
                             {
                                 conversationData.loadConversation.messages.map(
-                                    message => (<View>
+                                    (message, index) => (<View key={`message-${index}`} style={message.from_user_id === currentUserId ? styles.selfMessage : styles.otherMessage}>
                                         <Text>{message.from_user_id}</Text>
                                         <Text>{message.content}</Text>
                                     </View>)
@@ -74,6 +76,7 @@ export default function Chat({ route }) {
                         <View>
                             <TextInput
                                 placeholder="Enter message"
+                                value={chatMessage}
                                 onChangeText={(message) => setChatMessage(message)}
                                 onSubmitEditing={handleChatCommit}
                             />
@@ -94,4 +97,14 @@ const styles = StyleSheet.create({
         alignItems: "stretch",
         justifyContent: 'space-around',
     },
+    roomTitle: {
+        backgroundColor: "darkblue",
+        color: "white",
+    },
+    selfMessage: {
+        backgroundColor: "lightblue",
+    },
+    otherMessage: {
+        backgroundColor: "lightgray",
+    }
 });

@@ -28,7 +28,6 @@ export default function Login({ navigation }) {
             .then(response => {
                 if (response?.data?.login?.token) {
                     let { user_id, access_token } = response.data.login.token;
-                    console.log({ "login": { accessToken: access_token, userId: user_id } });
                     dispatch(setToken({ accessToken: access_token, userId: user_id }));
                     navigation.navigate("Home", { user_id });
                 } else {
