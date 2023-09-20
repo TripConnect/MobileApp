@@ -17,6 +17,7 @@ export default function User({ navigation, route }) {
     let currentUserId = useSelector(state => state.account.userId);
 
     const handleChatButtonPress = () => {
+        console.log([currentUserId, user_id]);
         createConversation({ variables: { name: null, user_ids: [currentUserId, user_id], type: "private" } })
             .then(response => {
                 navigation.navigate("Chat", {

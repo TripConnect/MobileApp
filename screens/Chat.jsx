@@ -18,7 +18,11 @@ const LOAD_CONVENTION_QUERY = gql`
     query LoadConversation($conversation_id: ID!, $page: Int, $limit: Int) {
         loadConversation(conversation_id: $conversation_id, page: $page, limit: $limit) {
             name
-            messages
+            messages {
+                from_user_id
+                to_user_id
+                content
+            }
         }
     }
 `;
@@ -29,25 +33,19 @@ export default function Chat({ route }) {
 
     const socket = useSelector((state) => state.account.socket);
     const [chatMessage, setChatMessage] = useState("");
-    const [conversationMessages, setConversationMessage] = useState({});
     const { loading: userLoading, error: userError, data: userData } = useQuery(USER_QUERY, {
         variables: { user_id }
     });
     const { loading: conversationLoading, error: conversationError, data: conversationData } = useQuery(LOAD_CONVENTION_QUERY, {
-        variables: { conversation_id: conversationId, page: 1, limit: 50 }
+        variables: { conversation_id: conversationId, page: 1, limit: 50 },
     });
     if (userError) {
         Alert.alert("Error", `Error! ${userError}`);
         return <Text>{`Error! ${userError}`}</Text>;
     };
     if (conversationError) {
-        Alert.alert("Error", `Error! ${conversationError}`)
+        Alert.alert("Error", `Error! ${conversationError}`);
         return <Text>{`Error! ${conversationError}`}</Text>;
-    }
-
-    if (!conversationLoading && !conversationError) {
-        console.log({ conversationData });
-        setConversationMessage(conversationData.loadConversation.messages);
     }
 
     const handleChatCommit = () => {
@@ -58,14 +56,14 @@ export default function Chat({ route }) {
     return (
         <View style={styles.container}>
             {
-                (userLoading || conversationData) ?
+                (userLoading || conversationLoading) ?
                     <Text>Loading...</Text>
                     :
                     <>
                         <Text>{userData.loadUser.display_name}</Text>
                         <View style={styles.messageContainer}>
                             {
-                                conversationMessages.map(
+                                conversationData.loadConversation.messages.map(
                                     message => (<View>
                                         <Text>{message.from_user_id}</Text>
                                         <Text>{message.content}</Text>
@@ -75,7 +73,6 @@ export default function Chat({ route }) {
                         </View>
                         <View>
                             <TextInput
-                                style={styles.main__inputField}
                                 placeholder="Enter message"
                                 onChangeText={(message) => setChatMessage(message)}
                                 onSubmitEditing={handleChatCommit}

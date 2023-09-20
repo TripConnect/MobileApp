@@ -9,7 +9,6 @@ export const userSlice = createSlice({
     reducers: {
         setToken: (state, action) => {
             let { accessToken, userId } = action.payload;
-            console.log({ accessToken });
             const socket = io(
                 process.env.EXPO_PUBLIC_API_URL,
                 {
