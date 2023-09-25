@@ -33,6 +33,7 @@ export default function Chat({ route }) {
     const { user_id, conversationId } = route.params;
     const currentUserId = useSelector((state) => state.account.userId);
     const socket = useSelector((state) => state.account.socket);
+    const conversations = useSelector((state) => state.chat.conversations);
     const [chatMessage, setChatMessage] = useState("");
     const { loading: userLoading, error: userError, data: userData } = useQuery(USER_QUERY, {
         variables: { user_id }
@@ -40,6 +41,7 @@ export default function Chat({ route }) {
     const { loading: conversationLoading, error: conversationError, data: conversationData } = useQuery(LOAD_CONVENTION_QUERY, {
         variables: { conversation_id: conversationId, page: 1, limit: 50 },
     });
+
     if (userError) {
         Alert.alert("Error", `Error! ${userError}`);
         return <Text>{`Error! ${userError}`}</Text>;

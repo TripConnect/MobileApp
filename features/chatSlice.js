@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = {};
+const initialState = { conversations: {} };
 const STATE_SIZE = 500;
 
 export const chatSlice = createSlice({
@@ -8,13 +8,15 @@ export const chatSlice = createSlice({
     initialState,
     reducers: {
         addConventionMessage: (state, { conventionId, ...message }) => {
-            if (!initialState.hasOwnProperty(conventionId)) {
-                initialState[conventionId] = [];
-            }
-            initialState[conventionId] = [state[conventionId], ...message];
-            if (initialState.length > STATE_SIZE) {
-                initialState = initialState.slice(0, STATE_SIZE);
-            }
+            return {
+                conversations:
+                {
+                    ...state.conversations,
+                    [conventionId]: state.conversations.hasOwnProperty(conventionId) ?
+                        [...state.conversations[conventionId], message].slice(0, STATE_SIZE) :
+                        [message],
+                }
+            };
         },
     },
 })
