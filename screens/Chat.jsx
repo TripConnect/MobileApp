@@ -56,7 +56,7 @@ export default function Chat({ route }) {
         socket.emit("chat", { content: chatMessage, toUserId: user_id, conversationId });
         setChatMessage("");
     }
-
+    console.log({ conversations });
     return (
         <View style={styles.container}>
             {
@@ -67,12 +67,20 @@ export default function Chat({ route }) {
                         <Text style={styles.roomTitle}>{userData.loadUser.display_name}</Text>
                         <View style={styles.messageContainer}>
                             {
-                                conversationData.loadConversation.messages.map(
-                                    (message, index) => (<View key={`message-${index}`} style={message.from_user_id === currentUserId ? styles.selfMessage : styles.otherMessage}>
-                                        <Text>{message.from_user_id}</Text>
-                                        <Text>{message.content}</Text>
-                                    </View>)
-                                )
+                                conversations.hasOwnProperty(conversationId) ?
+                                    conversations[conversationId].map(
+                                        (message, index) => (<View key={`message-${index}`} style={message.fromUserId === currentUserId ? styles.selfMessage : styles.otherMessage}>
+                                            <Text>{message.fromUserId}</Text>
+                                            <Text>{message.content}</Text>
+                                        </View>)
+                                    )
+                                    :
+                                    conversationData.loadConversation.messages.map(
+                                        (message, index) => (<View key={`message-${index}`} style={message.from_user_id === currentUserId ? styles.selfMessage : styles.otherMessage}>
+                                            <Text>{message.from_user_id}</Text>
+                                            <Text>{message.content}</Text>
+                                        </View>)
+                                    )
                             }
                         </View>
                         <View>

@@ -7,13 +7,15 @@ export const chatSlice = createSlice({
     name: 'chatSlice',
     initialState,
     reducers: {
-        addConventionMessage: (state, { conventionId, ...message }) => {
+        addConventionMessage: (state, action) => {
+            let { conversationId, ...message } = action.payload;
+            console.log("addConventionMessage", { conversationId, ...message })
             return {
                 conversations:
                 {
                     ...state.conversations,
-                    [conventionId]: state.conversations.hasOwnProperty(conventionId) ?
-                        [...state.conversations[conventionId], message].slice(0, STATE_SIZE) :
+                    [conversationId]: state.conversations.hasOwnProperty(conversationId) ?
+                        [...state.conversations[conversationId], message].slice(0, STATE_SIZE) :
                         [message],
                 }
             };

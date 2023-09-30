@@ -3,7 +3,7 @@ import { addConventionMessage } from '../features/chatSlice';
 
 
 export default function SocketIOListener() {
-    const socket = useSelector((state) => state?.user?.socket);
+    const socket = useSelector((state) => state?.account?.socket);
     const dispatch = useDispatch()
     if (socket) {
         socket.on('connect', () => {
@@ -13,9 +13,8 @@ export default function SocketIOListener() {
             console.log(err.message);
         });
         socket.on('chat', data => {
-            console.log({ "chat": data });
-            let { conventionId, content, fromUserId, toUserId } = data;
-            dispatch(addConventionMessage({ conventionId, content, fromUserId, toUserId }));
+            let { conversationId, content, fromUserId, toUserId } = data;
+            dispatch(addConventionMessage({ conversationId, content, fromUserId, toUserId }));
         });
     }
 

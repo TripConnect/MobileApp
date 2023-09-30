@@ -17,8 +17,8 @@ export default function App() {
   return (
     <Provider store={store}>
       <ApolloProvider client={client}>
-        <Router />
         <SocketIOListener />
+        <Router />
         <StatusBar style="auto" />
       </ApolloProvider>
     </Provider>
